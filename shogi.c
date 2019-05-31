@@ -5,10 +5,11 @@
 /**
 ** FUNCIONES
 **/
-int verifica_fin(char ); //done a la mitad falta agregar el jaque mate
-int jaque_mate(char );
-int mueve_negro(char juega); //done falta cuando juega pc
-int mueve_blanco (char juega);//done falta cuando juega pc
+int verifica_fin(char ); //done
+int inteligenciaPC(char juega);//done
+int jaque_mate(char ); //done
+int mueve_negro(char juega); //done
+int mueve_blanco (char juega);//done
 int come_reemplaza(char ficha,char filaActual,int columnaActual, char filaDestino, int columnaDestino); //done
 void imprime(); //done
 void carga_tablero(); //done
@@ -168,7 +169,7 @@ void imprime(){
 //Funcion que carga tablero predeterminado
 //Rey (R), General Oro (O), General Plata (P), Caballos (C), Lanceros (L), Alfil (A), Torre(T), Peones (p)
 void carga_tablero(){
-  /**int i, j;
+  int i, j;
   //Peones
   for( i=0; i<9 ; i++ ){
     table[2][i].ficha= 'p';
@@ -236,7 +237,9 @@ void carga_tablero(){
   table[0][4].ficha= 'R';
   table[0][4].color= 'b';
   table[8][4].ficha= 'R';
-  table[8][4].color= 'n';**/
+  table[8][4].color= 'n';
+
+  /**PRUEBA DE JAQUE MATE
   //cambiar
   table[0][5].ficha='P';
   table[0][5].color='n';
@@ -253,7 +256,7 @@ void carga_tablero(){
   table[3][7].ficha='A';
   table[3][7].color='n';
   table[6][0].ficha='p';
-  table[6][0].color='b';
+  table[6][0].color='b';**/
 }
 
 //En esta funcion se verificara si el juego llega a su fin
@@ -296,9 +299,9 @@ int verifica_fin(char jaque){
       retorno=0;
       return retorno;
     }
-  }**/  //cambiar
+  }**/
 
-  puts("\nLlega hasta antes de entrar a jaque mate\n"); //cambiar
+  //puts("\nLlega hasta antes de entrar a jaque mate\n"); //cambiar
   //Si es jaque mate
   if(jaque_mate(jaque)){
     retorno=0;
@@ -319,7 +322,7 @@ int jaque_mate(char jaque){
   int filaActual,columnaActual;
   int contadorJaque[9]={0,0,0,0,0,0,0,0,0}; //si en los 9 lugares hay uno o mas jaques pierde
   int checks=0;
-  printf("entro a jaque mate");
+  //printf("entro a jaque mate");
   //se encuentra al rey
   for(i=0; i<9 ;i++){
     for(j=0; j<9; j++){
@@ -594,7 +597,7 @@ int jaque_mate(char jaque){
       }
       if(i==1 && contadorJaque[1]==0){
         //controla que un alfil pueda comerlo en esa posicion
-        for(j=1; j+(filaActual-1)<9 && j+columnaActual<9 ;j++){
+        for(j=2; j+(filaActual-1)<9 && j+columnaActual<9 ;j++){
           if(table[filaActual-1+j][columnaActual+j].ficha=='A' && table[filaActual-1+j][columnaActual+j].color!=jaque){
             //hay un alfil que puede comerte
             contadorJaque[1]++;
@@ -2248,7 +2251,7 @@ int jaque_mate(char jaque){
             break;
           }
         }
-        for(j=2; j+(columnaActual-1) < 9 ;j++){
+        for(j=3; j+(columnaActual-1) < 9 ;j++){
           if(table[filaActual][columnaActual-1+j].ficha=='T' && table[filaActual][columnaActual-1+j].color!=jaque){
             //hay un torre que puede comerte
             contadorJaque[7]++;
@@ -2259,7 +2262,6 @@ int jaque_mate(char jaque){
             break;
           }
         }
-
         for(j=1; (columnaActual-1-j)>=0;j++){
           if(table[filaActual][columnaActual-1-j].ficha=='T' && table[filaActual][columnaActual-1-j].color!=jaque){
             //hay un torre que puede comerte
@@ -2455,24 +2457,6 @@ int jaque_mate(char jaque){
           }
         }
         if(i==1 && contadorJaque[8]==0){
-          j=1;
-          do{
-          //for(j=1; j+columnaActual< 9 ;j++){
-            if(table[filaActual][columnaActual+j].ficha=='T' && table[filaActual][columnaActual+j].color!=jaque){
-              //hay un torre que puede comerte
-              contadorJaque[8]++;
-              break;
-            }
-            else if(table[filaActual][columnaActual+j].ficha!= 'x'){
-              //hay algo en el medio
-              break;
-            }
-            else{
-              printf("\nNo encuentra nada a la derecha de la torre\n");//cambiar
-            }
-            j++;
-          }while(j<9);
-          printf("\nrevisa posicion actual hacia la derecha en torre\n"); //cambiar
           //controla que un torre pueda comerlo en esa posicion
           for(j=1; j+(filaActual)<9;j++){
             if(table[filaActual+j][columnaActual].ficha=='T' && table[filaActual+j][columnaActual].color!=jaque){
@@ -2496,7 +2480,17 @@ int jaque_mate(char jaque){
               break;
             }
           }
-
+          for(j=2 ; columnaActual+j< 9 ; j++){
+            if(table[filaActual][columnaActual+j].ficha=='T' && table[filaActual][columnaActual+j].color!=jaque){
+              //hay un torre que puede comerte
+              contadorJaque[8]++;
+              break;
+            }
+            else if(table[filaActual][columnaActual+j].ficha!= 'x'){
+              //hay algo en el medio
+              break;
+            }
+          }
           for(j=1; (columnaActual-j)>=0;j++){
             if(table[filaActual][columnaActual-j].ficha=='T' && table[filaActual][columnaActual-j].color!=jaque){
               //hay un torre que puede comerte
@@ -2542,7 +2536,7 @@ int jaque_mate(char jaque){
     }
 
   for(i=0;i<9;i++){
-    printf("\ncontadorJaque=%d\n",contadorJaque[i]);
+    //printf("\ncontadorJaque=%d\n",contadorJaque[i]);
     if(contadorJaque[i]>0){
       checks++;
     }
@@ -2575,9 +2569,9 @@ void juega_negro_human(){
     if(jugadaH ==-1 || verifica_fin(jugadorPC) != 1){//termina la partida en ese turno
       break;
     }
-    jugadaC=mueve_blanco(jugadorHuman); //cambiar a jugadorPC despues de pruebas
+    jugadaC=mueve_blanco(jugadorPC);
     imprime();
-    if(jugadaC == -1)
+    if(jugadaC == -2)
       break;
     turnosRealizados++;
   }while(verifica_fin(jugadorHuman)==1);
@@ -2596,9 +2590,9 @@ void juega_blanco_human(){
     if(jugadaH== -1 || verifica_fin(jugadorPC) != 1 ){//termina la partida en ese turno
       break;
     }
-    jugadaC=mueve_negro(jugadorHuman); //cambiar a jugadorPC despues de pruebas
+    jugadaC=mueve_negro(jugadorPC);
     imprime();
-    if(jugadaC==-1)
+    if(jugadaC==-2)
       break;
     turnosRealizados++;
   }while(verifica_fin(jugadorHuman)==1);
@@ -2609,9 +2603,9 @@ void juega_negro_PC(){
   int jugadaH;
   int jugadaC;
   do{
-    jugadaC=mueve_negro(jugadorHuman);//cambiar a jugadorPC despues de pruebas
+    jugadaC=mueve_negro(jugadorPC);
     imprime();
-    if(jugadaC== -1 || verifica_fin(jugadorHuman) != 1 )  {//termina la partida en ese turno
+    if(jugadaC== -2 || verifica_fin(jugadorHuman) != 1 )  {//termina la partida en ese turno
       break;
     }
     do{
@@ -2630,9 +2624,9 @@ void juega_blanco_PC(){
   int jugadaH;
   int jugadaC;
   do{
-    jugadaC=mueve_blanco(jugadorHuman);//cambiar a jugadorPC despues de pruebas hace rato llego aca pero hace como si movia negro
+    jugadaC=mueve_blanco(jugadorPC);//hace rato llego aca pero hace como si movia negro
     imprime();
-    if(jugadaC== -1 || verifica_fin(jugadorHuman) != 1){//termina la partida en ese turno
+    if(jugadaC== -2 || verifica_fin(jugadorHuman) != 1){//termina la partida en ese turno
       break;
     }
     do{
@@ -2957,6 +2951,7 @@ int come_reemplaza(char ficha,char filaActual,int columnaActual, char filaDestin
 
 //En esta funcion dependiendo de que parametro reciba jugara humano o PC las fichas negras
 //Retornara 0 si no hubo problemas y se movio a una posicion o comio una ficha enemiga o se rindio y retornara 1 si el lugar de destino que eligio esta ocupada por una negra, retornara -1 si el humano se rindio
+//retornara -2 si la pc quiere rendirse
 int mueve_negro(char juega){
   char filaActual;
   int columnaActual;
@@ -3515,12 +3510,22 @@ int mueve_negro(char juega){
     }
   }
   else{ //Juega PC
-
+    puts("Jugara pc");
+    if(rand()%8){ //si da cualquier numero distinto de 0 decide jugar
+      opcion=inteligenciaPC(juega);
+      printf("\npc jugo=%d \n",opcion);//cambiar
+    }
+    else{
+      //La pc desea rendirse
+      printf("\nLa PC se rindio! Gano Humano\n");
+      return -2;
+    }
   }
 }
 
 //En esta funcion dependiendo de que parametro reciba jugara humano o PC las fichas blancas
 //Retornara 0 si no hubo problemas y se movio a una posicion o comio una ficha enemiga o se rindio y retornara 1 si el lugar de destino que eligio esta ocupada por una blanca, retornara -1 si el humano se rindio
+//retornara -2 si la pc quiere rendirse
 int mueve_blanco(char juega){
   char filaActual;
   int columnaActual;
@@ -4076,6 +4081,325 @@ int mueve_blanco(char juega){
     }
   }
   else{ //Juega PC
+    puts("Jugara pc");
 
+    if(rand()%8){ //si da cualquier numero distinto de 0 decide jugar
+      opcion=inteligenciaPC(juega);
+      printf("\nPc=%d\n", opcion);
+    }
+    else{
+      //La pc desea rendirse
+      printf("\nLa PC se rindio! Gano Humano\n");
+      return -2;
+    }
   }
+}
+
+//Inteligencia de pc ve donde estan sus fichas y dependiendo que sea esa ficha intenta comer algo y si no encuentra se mueve solo 1 lugar
+int inteligenciaPC(char juega){
+  int retorno=0;
+  int i,j,k;
+  char filaActual;
+  int columnaActual;
+  //char filaDestino;
+  //int columnaDestino;
+  for(i=0;i<9;i++){
+    for(j=0;j<9;j++){
+      if(table[i][j].color == juega){
+        //movimientos para cada una de las fichas
+        if(table[filaActual][columnaActual].ficha == 'p'){
+          if(juega=='n'){
+            if(filaActual-1>=0 && table[filaActual-1][columnaActual].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+          else{
+            if(filaActual+1<9 && table[filaActual+1][columnaActual].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+        }
+        if(table[filaActual][columnaActual].ficha == 'A'){
+          for(k=0;filaActual+k<9 && columnaActual+k<9 ;k++){
+            if(table[filaActual+k][columnaActual+k].color!=juega && table[filaActual+k][columnaActual+k].ficha!='-'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+k, columnaActual+k);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+
+          }
+          for(k=0;filaActual-k>=0 && columnaActual-k>=0 ;k++){
+            if(table[filaActual-k][columnaActual-k].color!=juega && table[filaActual-k][columnaActual-k].ficha!='-'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-k, columnaActual-k);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+            }
+
+          }
+          for(k=0;filaActual-k>=0 && columnaActual+k<9 ;k++){
+            if(table[filaActual-k][columnaActual+k].color!=juega && table[filaActual-k][columnaActual+k].ficha!='-'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-k, columnaActual+k);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+            }
+          }
+          for(k=0;filaActual+k<9 && columnaActual-k>=0 ;k++){
+            if(table[filaActual+k][columnaActual-k].color!=juega && table[filaActual+k][columnaActual-k].ficha!='-'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+k, columnaActual-k);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+            }
+          }
+
+        }
+        if(table[filaActual][columnaActual].ficha == 'T'){
+          for(k=0;columnaActual+k<9 ;k++){
+            if(table[filaActual][columnaActual+k].color!=juega && table[filaActual][columnaActual+k].ficha!='-'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual+k);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+          for(k=0;columnaActual-k>=0 ;k++){
+            if(table[filaActual][columnaActual-k].color!=juega && table[filaActual][columnaActual-k].ficha!='-'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual-k);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+            }
+          }
+          for(k=0;filaActual-k>=0;k++){
+            if(table[filaActual-k][columnaActual].color!=juega && table[filaActual-k][columnaActual].ficha!='-'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-k, columnaActual);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+            }
+          }
+          for(k=0;filaActual+k<9;k++){
+            if(table[filaActual+k][columnaActual].color!=juega && table[filaActual+k][columnaActual].ficha!='-'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+k, columnaActual);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+            }
+          }
+        }
+        if(table[filaActual][columnaActual].ficha == 'P'){
+          if(juega=='n'){
+            if(filaActual-1>=0 && filaActual-1<9 && table[filaActual-1][columnaActual-1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual-1>=0 && columnaActual+1<9 && table[filaActual-1][columnaActual+1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && columnaActual-1>=0 && table[filaActual+1][columnaActual-1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && columnaActual+1<9 && table[filaActual+1][columnaActual+1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual-1>=0 && table[filaActual-1][columnaActual].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+          else{
+            if(filaActual-1>=0 && filaActual-1<9 && table[filaActual-1][columnaActual-1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual-1>=0 && columnaActual+1<9 && table[filaActual-1][columnaActual+1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && columnaActual-1>=0 && table[filaActual+1][columnaActual-1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && columnaActual+1<9 && table[filaActual+1][columnaActual+1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && table[filaActual+1][columnaActual].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+        }
+        if(table[filaActual][columnaActual].ficha == 'O'){
+          if(juega=='n'){
+            if(filaActual-1>=0 && filaActual-1>=0 && table[filaActual-1][columnaActual-1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual-1>=0 && columnaActual+1<9 && table[filaActual-1][columnaActual+1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual-1>=0 && table[filaActual-1][columnaActual].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(columnaActual-1>=0 && table[filaActual][columnaActual-1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(columnaActual+1<9 && table[filaActual][columnaActual-1].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && table[filaActual+1][columnaActual].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+
+          }
+          else{
+            if(filaActual-1>=0 && table[filaActual-1][columnaActual].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(columnaActual-1>=0 && table[filaActual][columnaActual-1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(columnaActual+1<9 && table[filaActual][columnaActual-1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && table[filaActual+1][columnaActual].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && columnaActual-1>=0 && table[filaActual+1][columnaActual-1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && columnaActual+1<9 && table[filaActual+1][columnaActual+1].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+        }
+        if(table[filaActual][columnaActual].ficha == 'C'){
+          if(juega=='n'){
+            if(filaActual-2>=0 && columnaActual+1 <9 && table[filaActual-1][columnaActual].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-2, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual-2>=0 && columnaActual-1 >=0 && table[filaActual-1][columnaActual].color!='n'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-2, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+          else{
+            if(filaActual+1<9 && columnaActual+1 <9 && table[filaActual+1][columnaActual].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+2, columnaActual+1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+            if(filaActual+1<9 && columnaActual-1 >=0 && table[filaActual+1][columnaActual].color!='b'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+2, columnaActual-1);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+            }
+          }
+        }
+        if(table[filaActual][columnaActual].ficha == 'L'){
+          if(juega=='n'){
+            for(k=0;filaActual-k>=0;k++){
+              if(table[filaActual-k][columnaActual].color!=juega && table[filaActual-k][columnaActual].ficha!='-'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-k, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+              }
+            }
+          }
+          else{
+            for(k=0;filaActual+k<9;k++){
+              if(table[filaActual+k][columnaActual].color!=juega && table[filaActual+k][columnaActual].ficha!='-'){
+              come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+k, columnaActual);
+              printf("\nPc comio o remplazo tranquilo\n");
+              return 1;
+              }
+            }
+          }
+        }
+        if(table[filaActual][columnaActual].ficha == 'R'){
+          if(filaActual-1>=0 && columnaActual-1>=0 && table[filaActual-1][columnaActual-1].color!='n'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual-1);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+          if(filaActual-1>=0 && columnaActual+1<9 && table[filaActual-1][columnaActual+1].color!='n'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual+1);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+          if(filaActual-1>=0 && table[filaActual-1][columnaActual].color!='n'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual-1, columnaActual);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+          if(columnaActual-1>=0 && table[filaActual][columnaActual-1].color!='n'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual-1);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+          if(columnaActual+1<9 && table[filaActual][columnaActual-1].color!='n'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual, columnaActual+1);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+          if(filaActual+1<9 && table[filaActual+1][columnaActual].color!='n'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+          if(filaActual+1<9 && columnaActual-1>=0 && table[filaActual+1][columnaActual-1].color!='b'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual-1);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+          if(filaActual+1<9 && columnaActual+1<9 && table[filaActual+1][columnaActual+1].color!='b'){
+            come_reemplaza(table[filaActual][columnaActual].ficha, filaActual, columnaActual, filaActual+1, columnaActual+1);
+            printf("\nPc comio o remplazo tranquilo\n");
+            return 1;
+          }
+        }
+
+      }
+    }
+  }
+  return retorno;
 }
